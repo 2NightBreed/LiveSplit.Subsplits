@@ -259,7 +259,7 @@ public class SplitComponent : IComponent
                 g.DrawRectangle(highlightPen, 0, 0, width - 1, height - 1);
             }
 
-            Image icon = Split.Icon;
+            Image icon = state.Run.IndexOf(Split) < state.CurrentSplitIndex ? ConvertToGrayscale(Split.Icon) : Split.Icon;
             if (DisplayIcon && icon != null)
             {
                 Image shadow = ShadowImage;
@@ -445,7 +445,7 @@ public class SplitComponent : IComponent
             TimeLabel.Height = 50;
         }
 
-        Image icon = Split.Icon;
+        Image icon = ConvertToGrayscale(Split.Icon);
         if (DisplayIcon && icon != null)
         {
             Image shadow = ShadowImage;
@@ -1254,5 +1254,31 @@ public class SplitComponent : IComponent
 
     public void Dispose()
     {
+    }
+
+    private static Image ConvertToGrayscale(Image image)
+    {
+        Image grayscaleImage = new Bitmap(image.Width, image.Height, image.PixelFormat);
+
+        var attributes = new ImageAttributes();
+        var grayscaleMatrix = new ColorMatrix([
+            [0.299f, 0.299f, 0.299f, 0, 0],
+            [0.587f, 0.587f, 0.587f, 0, 0],
+            [0.114f, 0.114f, 0.114f, 0, 0],
+            [0, 0, 0, 1, 0],
+            [0, 0, 0, 0, 1],
+        ]);
+        attributes.SetColorMatrix(grayscaleMatrix);
+
+        using (var g = Graphics.FromImage(grayscaleImage))
+        {
+            g.DrawImage(image,
+                new Rectangle(0, 0, grayscaleImage.Width, grayscaleImage.Height),
+                0, 0, grayscaleImage.Width, grayscaleImage.Height,
+                GraphicsUnit.Pixel,
+                attributes);
+        }
+
+        return grayscaleImage;
     }
 }
