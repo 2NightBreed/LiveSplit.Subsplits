@@ -250,7 +250,14 @@ public class SplitComponent : IComponent
                 g.DrawRectangle(highlightPen, 0, 0, width - 1, height - 1);
             }
 
-            Image icon = Split.Icon;
+            int indexOfSplit = state.Run.IndexOf(Split);
+            int indexOfHilightSplit = state.Run.IndexOf(SplitsSettings.HilightSplit);
+            bool isSplitBehindHilightSplit = indexOfSplit < indexOfHilightSplit;
+
+            int currentSplitIndex = state.CurrentSplitIndex;
+            bool isSplitBehindCurrentSplitIndex = indexOfSplit < currentSplitIndex;
+
+            Image icon = isSplitBehindHilightSplit || isSplitBehindCurrentSplitIndex ? LiveSplitStateHelper.ConvertImageToGrayscale(Split.Icon) : Split.Icon;
             if (DisplayIcon && icon != null)
             {
                 Image shadow = ShadowImage;
@@ -432,7 +439,7 @@ public class SplitComponent : IComponent
             TimeLabel.Height = 50;
         }
 
-        Image icon = Split.Icon;
+        Image icon = LiveSplitStateHelper.ConvertImageToGrayscale(Split.Icon);
         if (DisplayIcon && icon != null)
         {
             Image shadow = ShadowImage;
