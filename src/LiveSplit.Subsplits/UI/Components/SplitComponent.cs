@@ -109,7 +109,10 @@ public class SplitComponent : IComponent
         Settings = settings;
         ColumnsList = columnsList;
         TimeFormatter = new SplitTimeFormatter(Settings.SplitTimesAccuracy);
-        DeltaTimeFormatter = new DeltaSplitTimeFormatter(Settings.DeltasAccuracy, Settings.DropDecimals);
+        DeltaTimeFormatter = new DeltaSplitTimeFormatter(Settings.DeltasAccuracy, Settings.DropDecimals)
+        {
+            UseCustomDeltaTimeFormatter = true
+        };
         HeaderTimesFormatter = new SplitTimeFormatter(Settings.HeaderAccuracy);
         SectionTimerFormatter = new SplitTimeFormatter(Settings.SectionTimerAccuracy);
         MinimumHeight = 25;
@@ -194,7 +197,10 @@ public class SplitComponent : IComponent
 
         if (Settings.DeltasAccuracy != CurrentDeltaAccuracy || Settings.DropDecimals != CurrentDropDecimals)
         {
-            DeltaTimeFormatter = new DeltaSplitTimeFormatter(Settings.DeltasAccuracy, Settings.DropDecimals);
+            DeltaTimeFormatter = new DeltaSplitTimeFormatter(Settings.DeltasAccuracy, Settings.DropDecimals)
+            {
+                UseCustomDeltaTimeFormatter = true
+            };
             CurrentDeltaAccuracy = Settings.DeltasAccuracy;
             CurrentDropDecimals = Settings.DropDecimals;
         }
@@ -403,7 +409,10 @@ public class SplitComponent : IComponent
 
         if (Settings.DeltasAccuracy != CurrentDeltaAccuracy || Settings.DropDecimals != CurrentDropDecimals)
         {
-            DeltaTimeFormatter = new DeltaSplitTimeFormatter(Settings.DeltasAccuracy, Settings.DropDecimals);
+            DeltaTimeFormatter = new DeltaSplitTimeFormatter(Settings.DeltasAccuracy, Settings.DropDecimals)
+            {
+                UseCustomDeltaTimeFormatter = true
+            };
             CurrentDeltaAccuracy = Settings.DeltasAccuracy;
             CurrentDropDecimals = Settings.DropDecimals;
         }
