@@ -523,7 +523,7 @@ public partial class SplitsSettings : UserControl
         {
             trkSize.DataBindings.Clear();
             trkSize.Minimum = 0;
-            trkSize.Maximum = 250;
+            trkSize.Maximum = 700;
             ScaledSplitHeight = Math.Min(Math.Max(trkSize.Minimum, ScaledSplitHeight), trkSize.Maximum);
             trkSize.DataBindings.Add("Value", this, "ScaledSplitHeight", false, DataSourceUpdateMode.OnPropertyChanged);
             lblSplitSize.Text = "Split Height:";
