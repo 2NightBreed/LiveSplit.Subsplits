@@ -824,7 +824,7 @@ public partial class SplitsSettings : UserControl
         {
             HeaderAccuracy = TimeAccuracy.Hundredths;
         }
-        else
+        else if (rdoHeaderAccuracyMilliseconds.Checked)
         {
             HeaderAccuracy = TimeAccuracy.Milliseconds;
         }
@@ -864,7 +864,7 @@ public partial class SplitsSettings : UserControl
         {
             SectionTimerAccuracy = TimeAccuracy.Hundredths;
         }
-        else
+        else if (rdoSectionTimerAccuracyMilliseconds.Checked)
         {
             SectionTimerAccuracy = TimeAccuracy.Milliseconds;
         }
