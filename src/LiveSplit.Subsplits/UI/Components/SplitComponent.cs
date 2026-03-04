@@ -253,7 +253,8 @@ public class SplitComponent : IComponent
 
             if (IsHighlight)
             {
-                var highlightPen = new Pen(Color.White);
+                var color = Color.FromArgb(106, 255, 255, 255);
+                var highlightPen = new Pen(color);
                 g.DrawRectangle(highlightPen, 0, 0, width - 1, height - 1);
             }
 
