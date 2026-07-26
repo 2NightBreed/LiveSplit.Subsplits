@@ -39,6 +39,7 @@ public class SplitComponent : IComponent
     protected bool IsActive { get; set; }
     protected bool IsHighlight { get; set; }
     protected bool IsSubsplit { get; set; }
+    protected bool IsLastSubSplit { get; set; }
 
     protected TimeAccuracy CurrentAccuracy { get; set; }
     protected TimeAccuracy CurrentDeltaAccuracy { get; set; }
@@ -264,7 +265,10 @@ public class SplitComponent : IComponent
 
             bool isSplitBehind = isSplitBehindHilightSplit || isSplitBehindCurrentSplitIndex;
 
-            Image icon = isSplitBehind ? LiveSplitStateHelper.ConvertImageToGrayscale(Split.Icon) : Split.Icon;
+            bool shouldDisplayLastSubsplitIcon = IsLastSubSplit && Split.LastSubsplitIcon != null;
+
+            Image splitIcon = CollapsedSplit ? Split.Icon : shouldDisplayLastSubsplitIcon ? Split.LastSubsplitIcon : Split.Icon;
+            Image icon = isSplitBehind ? LiveSplitStateHelper.ConvertImageToGrayscale(splitIcon) : splitIcon;
             if (DisplayIcon && icon != null)
             {
                 Image shadow = ShadowImage;
@@ -688,6 +692,7 @@ public class SplitComponent : IComponent
                 && ((!Settings.HideSubsplits && state.CurrentSplit == Split) || (SplitsSettings.SectionSplit != null && SplitsSettings.SectionSplit == Split));
             IsHighlight = SplitsSettings.HilightSplit == Split;
             IsSubsplit = Split.Name.StartsWith("-") && Split != state.Run[^1];
+            IsLastSubSplit = Split.Name.StartsWith("{");
 
             if (IsSubsplit)
             {
