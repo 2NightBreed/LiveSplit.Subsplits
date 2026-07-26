@@ -683,6 +683,11 @@ public class SplitComponent : IComponent
         return splitColor;
     }
 
+    private bool IsCollapsedSectionBestSegment(LiveSplitState state, int splitIndex, TimingMethod method)
+    {
+        return state.LayoutSettings.ShowBestSegments && LiveSplitStateHelper.CheckBestSegment(state, splitIndex, method);
+    }
+
     protected void UpdateAll(LiveSplitState state)
     {
         if (Split != null)
@@ -1010,6 +1015,12 @@ public class SplitComponent : IComponent
                 TimeSpan? segmentDelta = getSectionDelta(state, splitIndex, TopSplit, comparison, timingMethod);
                 Color? color = GetSectionColor(state, deltaTime, segmentDelta)
                     ?? (Settings.OverrideTimesColor ? Settings.BeforeTimesColor : state.LayoutSettings.TextColor);
+
+                if (IsCollapsedSectionBestSegment(state, splitIndex, timingMethod))
+                {
+                    color = LiveSplitStateHelper.GetBestSegmentColor(state);
+                }
+
                 label.ForeColor = color.Value;
 
                 if (type == ColumnType.DeltaorSplitTime)
@@ -1028,6 +1039,12 @@ public class SplitComponent : IComponent
                 TimeSpan? segmentDelta = getSectionDelta(state, splitIndex, TopSplit, comparison, timingMethod);
                 Color? color = GetSectionColor(state, null, segmentDelta)
                     ?? (Settings.OverrideTimesColor ? Settings.BeforeTimesColor : state.LayoutSettings.TextColor);
+
+                if (IsCollapsedSectionBestSegment(state, splitIndex, timingMethod))
+                {
+                    color = LiveSplitStateHelper.GetBestSegmentColor(state);
+                }
+
                 label.ForeColor = color.Value;
 
                 if (type == ColumnType.SegmentDeltaorSegmentTime)
