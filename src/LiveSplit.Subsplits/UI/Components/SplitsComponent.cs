@@ -455,6 +455,10 @@ public class SplitsComponent : IComponent
         runningSectionIndex = sectionList.getSection(runningSectionIndex);
         lastSplitOfSection = sectionList.Sections[currentSection].getSubsplitCount() > 0 ? sectionList.Sections[currentSection].endIndex : -1;
 
+        bool collapseFirstSection = state.CurrentPhase == TimerPhase.NotRunning
+            && currentSplit == 0
+            && sectionList.Sections[0].getSubsplitCount() > 0;
+
         if (Settings.HideSubsplits)
         {
             if (ScrollOffset != 0)
@@ -477,7 +481,7 @@ public class SplitsComponent : IComponent
         }
 
         bool addLast = Settings.AlwaysShowLastSplit || currentSplit == state.Run.Count() - 1;
-        bool addHeader = Settings.ShowHeader && (sectionList.Sections[currentSection].getSubsplitCount() > 0);
+        bool addHeader = !collapseFirstSection && Settings.ShowHeader && (sectionList.Sections[currentSection].getSubsplitCount() > 0);
 
         int freeSplits = visualSplitCount - (addLast ? 1 : 0) - (addHeader ? 1 : 0);
         int topSplit = currentSplit - 1;
@@ -485,7 +489,7 @@ public class SplitsComponent : IComponent
         int majorSplitsToAdd = (!Settings.ShowSubsplits && !Settings.HideSubsplits) ? Math.Min(currentSection, Settings.MinimumMajorSplits) : 0;
 
         List<int> visibleSplits = [];
-        if ((currentSplit < state.Run.Count() - 1) && (freeSplits > 0) && (!Settings.HideSubsplits || sectionList.isMajorSplit(currentSplit)))
+        if ((currentSplit < state.Run.Count() - 1) && (freeSplits > 0) && ((!Settings.HideSubsplits && !collapseFirstSection) || sectionList.isMajorSplit(currentSplit)))
         {
             visibleSplits.Add(currentSplit);
             freeSplits--;
@@ -494,7 +498,7 @@ public class SplitsComponent : IComponent
         int previewCount = 0;
         while ((previewCount < Settings.SplitPreviewCount) && (bottomSplit < state.Run.Count() - (addLast ? 1 : 0)) && (freeSplits > majorSplitsToAdd))
         {
-            if (ShouldIncludeSplit(currentSection, bottomSplit))
+            if (ShouldIncludeSplit(currentSection, bottomSplit, collapseFirstSection))
             {
                 if (bottomSplit == state.Run.Count - 1)
                 {
@@ -515,7 +519,7 @@ public class SplitsComponent : IComponent
         while ((topSplit >= 0) && (freeSplits > 0))
         {
             bool isMajor = sectionList.isMajorSplit(topSplit);
-            if (ShouldIncludeSplit(currentSection, topSplit) && (freeSplits > majorSplitsToAdd || sectionList.isMajorSplit(topSplit)))
+            if (ShouldIncludeSplit(currentSection, topSplit, collapseFirstSection) && (freeSplits > majorSplitsToAdd || sectionList.isMajorSplit(topSplit)))
             {
                 visibleSplits.Insert(0, topSplit);
                 freeSplits--;
@@ -530,7 +534,7 @@ public class SplitsComponent : IComponent
 
         while ((bottomSplit < state.Run.Count() - (addLast ? 1 : 0)) && (freeSplits > 0))
         {
-            if (ShouldIncludeSplit(currentSection, bottomSplit))
+            if (ShouldIncludeSplit(currentSection, bottomSplit, collapseFirstSection))
             {
                 if (bottomSplit == state.Run.Count - 1)
                 {
@@ -613,7 +617,7 @@ public class SplitsComponent : IComponent
         {
             if (i < SplitComponents.Count)
             {
-                SplitComponents[i].ForceIndent = !Settings.ShowSubsplits && !Settings.HideSubsplits && Settings.IndentSectionSplit && split == lastSplitOfSection;
+                SplitComponents[i].ForceIndent = !collapseFirstSection && !Settings.ShowSubsplits && !Settings.HideSubsplits && Settings.IndentSectionSplit && split == lastSplitOfSection;
 
                 if (split == int.MinValue)
                 {
@@ -636,7 +640,7 @@ public class SplitsComponent : IComponent
                     SplitComponents[i].Split = state.Run[split];
                     SplitComponents[i].oddSplit = ((sectionList.getSection(split) + (Settings.ShowColumnLabels ? 1 : 0)) % 2) == 0;
 
-                    if ((Settings.HideSubsplits || sectionList.getSection(split) != currentSection)
+                    if ((Settings.HideSubsplits || sectionList.getSection(split) != currentSection || collapseFirstSection)
                         && sectionList.Sections[sectionList.getSection(split)].getSubsplitCount() > 0
                         && !Settings.ShowSubsplits)
                     {
@@ -743,7 +747,7 @@ public class SplitsComponent : IComponent
         }
     }
 
-    private bool ShouldIncludeSplit(int currentSection, int split)
+    private bool ShouldIncludeSplit(int currentSection, int split, bool collapseFirstSection)
     {
         if (sectionList.isMajorSplit(split))
         {
@@ -751,7 +755,7 @@ public class SplitsComponent : IComponent
         }
         else
         {
-            return Settings.ShowSubsplits || (!Settings.HideSubsplits && sectionList.getSection(split) == currentSection);
+            return Settings.ShowSubsplits || (!Settings.HideSubsplits && !collapseFirstSection && sectionList.getSection(split) == currentSection);
         }
     }
 
