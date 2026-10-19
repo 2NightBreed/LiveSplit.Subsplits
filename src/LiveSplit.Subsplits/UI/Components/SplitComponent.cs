@@ -445,7 +445,9 @@ public class SplitComponent : IComponent
             TimeLabel.Height = 50;
         }
 
-        Image icon = Split.Icon;
+        bool isSplitBehind = IsSplitBehindCurrentSplit || IsSplitBehindHighlightSplit;
+
+        Image icon = isSplitBehind ? LiveSplitStateHelper.ConvertImageToGrayscale(Split.Icon) : Split.Icon;
         if (DisplayIcon && icon != null)
         {
             Image shadow = ShadowImage;
@@ -774,6 +776,8 @@ public class SplitComponent : IComponent
                 {
                     DeltaLabel.Text = "";
                 }
+
+                splitIndex = TopSplit - 1;
             }
             else
             {
