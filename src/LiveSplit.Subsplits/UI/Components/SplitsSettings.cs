@@ -87,6 +87,7 @@ public partial class SplitsSettings : UserControl
     public bool ShowHeader { get; set; }
     public bool IndentSectionSplit { get; set; }
     public bool ShowIconSectionSplit { get; set; }
+    public bool LastSubSplitIcons { get; set; }
     public bool ShowSectionIcon { get; set; }
     public Color HeaderTopColor { get; set; }
     public Color HeaderBottomColor { get; set; }
@@ -205,6 +206,7 @@ public partial class SplitsSettings : UserControl
         ShowHeader = true;
         IndentSectionSplit = true;
         ShowIconSectionSplit = true;
+        LastSubSplitIcons = false;
         ShowSectionIcon = true;
         HeaderTopColor = Color.FromArgb(0x2B, 0xFF, 0xFF, 0xFF);
         HeaderBottomColor = Color.FromArgb(0xD8, 0x00, 0x00, 0x00);
@@ -257,6 +259,7 @@ public partial class SplitsSettings : UserControl
         chkShowHeader.DataBindings.Add("Checked", this, "ShowHeader", false, DataSourceUpdateMode.OnPropertyChanged);
         chkIndentSectionSplit.DataBindings.Add("Checked", this, "IndentSectionSplit", false, DataSourceUpdateMode.OnPropertyChanged);
         chkShowIconSectionSplit.DataBindings.Add("Checked", this, "ShowIconSectionSplit", false, DataSourceUpdateMode.OnPropertyChanged);
+        chkLastSubSplitIcons.DataBindings.Add("Checked", this, "LastSubSplitIcons", false, DataSourceUpdateMode.OnPropertyChanged);
         chkShowSectionIcon.DataBindings.Add("Checked", this, "ShowSectionIcon", false, DataSourceUpdateMode.OnPropertyChanged);
         btnHeaderTopColor.DataBindings.Add("BackColor", this, "HeaderTopColor", false, DataSourceUpdateMode.OnPropertyChanged);
         btnHeaderBottomColor.DataBindings.Add("BackColor", this, "HeaderBottomColor", false, DataSourceUpdateMode.OnPropertyChanged);
@@ -551,6 +554,7 @@ public partial class SplitsSettings : UserControl
         ShowHeader = SettingsHelper.ParseBool(element["ShowHeader"], true);
         IndentSectionSplit = SettingsHelper.ParseBool(element["IndentSectionSplit"], true);
         ShowIconSectionSplit = SettingsHelper.ParseBool(element["ShowIconSectionSplit"], true);
+        LastSubSplitIcons = SettingsHelper.ParseBool(element["LastSubSplitIcons"], false);
         ShowSectionIcon = SettingsHelper.ParseBool(element["ShowSectionIcon"], true);
         HeaderTopColor = SettingsHelper.ParseColor(element["HeaderTopColor"], Color.FromArgb(0x2B, 0xFF, 0xFF, 0xFF));
         HeaderBottomColor = SettingsHelper.ParseColor(element["HeaderBottomColor"], Color.FromArgb(0xD8, 0x00, 0x00, 0x00));
@@ -701,6 +705,7 @@ public partial class SplitsSettings : UserControl
         SettingsHelper.CreateSetting(document, parent, "ShowHeader", ShowHeader) ^
         SettingsHelper.CreateSetting(document, parent, "IndentSectionSplit", IndentSectionSplit) ^
         SettingsHelper.CreateSetting(document, parent, "ShowIconSectionSplit", ShowIconSectionSplit) ^
+        SettingsHelper.CreateSetting(document, parent, "LastSubSplitIcons", LastSubSplitIcons) ^
         SettingsHelper.CreateSetting(document, parent, "ShowSectionIcon", ShowSectionIcon) ^
         SettingsHelper.CreateSetting(document, parent, "HeaderGradient", HeaderGradient) ^
         SettingsHelper.CreateSetting(document, parent, "OverrideHeaderColor", OverrideHeaderColor) ^
@@ -969,5 +974,10 @@ public partial class SplitsSettings : UserControl
     private void chkAutomaticAbbreviation_CheckedChanged(object sender, EventArgs e)
     {
         AutomaticAbbreviation = chkAutomaticAbbreviation.Checked;
+    }
+
+    private void chkShowIconSectionSplit_CheckedChanged(object sender, EventArgs e)
+    {
+        chkLastSubSplitIcons.Enabled = chkShowIconSectionSplit.Checked;
     }
 }
