@@ -36,6 +36,7 @@ public class SplitsComponent : IComponent
     protected ITimeFormatter DeltaTimeFormatter { get; set; }
 
     private Dictionary<Image, Image> ShadowImages { get; set; }
+    private Dictionary<Image, Image> LastSubsplitShadowImages { get; set; }
 
     private int visualSplitCount;
     private IRun previousRun;
@@ -85,6 +86,7 @@ public class SplitsComponent : IComponent
         DeltaTimeFormatter = new DeltaSplitTimeFormatter(CurrentDeltaAccuracy, CurrentDropDecimals);
 
         ShadowImages = [];
+        LastSubsplitShadowImages = [];
         visualSplitCount = Settings.VisualSplitCount;
         Settings.SplitLayoutChanged += Settings_SplitLayoutChanged;
         ColumnWidths = [.. Settings.ColumnsList.Select(_ => (0, 0f, 0f))];
@@ -198,6 +200,7 @@ public class SplitsComponent : IComponent
         if (OldShadowsColor != state.LayoutSettings.ShadowsColor)
         {
             ShadowImages.Clear();
+            LastSubsplitShadowImages.Clear();
         }
 
         foreach (ISegment split in state.Run)
@@ -205,6 +208,11 @@ public class SplitsComponent : IComponent
             if (split.Icon != null && (!ShadowImages.ContainsKey(split.Icon) || OldShadowsColor != state.LayoutSettings.ShadowsColor))
             {
                 ShadowImages.Add(split.Icon, IconShadow.Generate(split.Icon, state.LayoutSettings.ShadowsColor));
+            }
+
+            if (split.LastSubsplitIcon != null && (!LastSubsplitShadowImages.ContainsKey(split.LastSubsplitIcon) || OldShadowsColor != state.LayoutSettings.ShadowsColor))
+            {
+                LastSubsplitShadowImages.Add(split.LastSubsplitIcon, IconShadow.Generate(split.LastSubsplitIcon, state.LayoutSettings.ShadowsColor));
             }
         }
 
@@ -220,6 +228,7 @@ public class SplitsComponent : IComponent
                 : Settings.DisplayIcons && !hideIconSectionSplit && iconsNotBlank && shouldIndent;
 
             split.ShadowImage = split.Split?.Icon != null ? ShadowImages[split.Split.Icon] : null;
+            split.LastSubsplitShadowImage = split.Split?.LastSubsplitIcon != null ? LastSubsplitShadowImages[split.Split.LastSubsplitIcon] : null;
         }
 
         OldShadowsColor = state.LayoutSettings.ShadowsColor;
