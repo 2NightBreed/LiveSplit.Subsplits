@@ -63,6 +63,8 @@ public partial class SplitsSettings : UserControl
     public bool DisplayIcons { get; set; }
     public bool IconShadows { get; set; }
     public bool IndentBlankIcons { get; set; }
+    public bool IsBehindCurrentSplit { get; set; }
+    public bool IsBehindHighlightSplit { get; set; }
     public bool ShowThinSeparators { get; set; }
     public bool AlwaysShowLastSplit { get; set; }
     public bool LockLastSplit { get; set; }
@@ -190,6 +192,8 @@ public partial class SplitsSettings : UserControl
         LabelsColor = Color.FromArgb(255, 255, 255);
 
         IndentBlankIcons = true;
+        IsBehindCurrentSplit = false;
+        IsBehindHighlightSplit = false;
         IndentSubsplits = true;
         HideSubsplits = false;
         ShowSubsplits = false;
@@ -242,6 +246,8 @@ public partial class SplitsSettings : UserControl
         btnDeltaColor.DataBindings.Add("BackColor", this, "DeltasColor", false, DataSourceUpdateMode.OnPropertyChanged);
 
         chkIndentSubsplits.DataBindings.Add("Checked", this, "IndentSubsplits", false, DataSourceUpdateMode.OnPropertyChanged);
+        chkIsBehindCurrentSplit.DataBindings.Add("Checked", this, "IsBehindCurrentSplit", false, DataSourceUpdateMode.OnPropertyChanged);
+        chkIsBehindHighlightSplit.DataBindings.Add("Checked", this, "IsBehindHighlightSplit", false, DataSourceUpdateMode.OnPropertyChanged);
         chkCurrentSectionOnly.DataBindings.Add("Checked", this, "CurrentSectionOnly", false, DataSourceUpdateMode.OnPropertyChanged);
         chkOverrideSubsplitColor.DataBindings.Add("Checked", this, "OverrideSubsplitColor", false, DataSourceUpdateMode.OnPropertyChanged);
         cmbSubsplitGradient.DataBindings.Add("SelectedItem", this, "SubsplitGradientString", false, DataSourceUpdateMode.OnPropertyChanged);
@@ -288,7 +294,7 @@ public partial class SplitsSettings : UserControl
 
     private void chkDisplayIcons_CheckedChanged(object sender, EventArgs e)
     {
-        trkIconSize.Enabled = label5.Enabled = chkIconShadows.Enabled = chkDisplayIcons.Checked;
+        trkIconSize.Enabled = label5.Enabled = chkIconShadows.Enabled = chkIsBehindCurrentSplit.Enabled = chkIsBehindHighlightSplit.Enabled = chkDisplayIcons.Checked;
     }
 
     private void chkIndentBlankIcons_CheckedChanged(object sender, EventArgs e)
@@ -532,6 +538,8 @@ public partial class SplitsSettings : UserControl
         AlwaysShowLastSplit = SettingsHelper.ParseBool(element["AlwaysShowLastSplit"], true);
         SplitWidth = SettingsHelper.ParseFloat(element["SplitWidth"], 20);
         IndentBlankIcons = SettingsHelper.ParseBool(element["IndentBlankIcons"], true);
+        IsBehindCurrentSplit = SettingsHelper.ParseBool(element["IsBehindCurrentSplit"], false);
+        IsBehindHighlightSplit = SettingsHelper.ParseBool(element["IsBehindHighlightSplit"], false);
         IndentSubsplits = SettingsHelper.ParseBool(element["IndentSubsplits"], true);
         HideSubsplits = SettingsHelper.ParseBool(element["HideSubsplits"], false);
         ShowSubsplits = SettingsHelper.ParseBool(element["ShowSubsplits"], false);
@@ -683,6 +691,8 @@ public partial class SplitsSettings : UserControl
         SettingsHelper.CreateSetting(document, parent, "Display2Rows", Display2Rows) ^
         SettingsHelper.CreateSetting(document, parent, "IndentBlankIcons", IndentBlankIcons) ^
         SettingsHelper.CreateSetting(document, parent, "IndentSubsplits", IndentSubsplits) ^
+        SettingsHelper.CreateSetting(document, parent, "IsBehindCurrentSplit", IsBehindCurrentSplit) ^
+        SettingsHelper.CreateSetting(document, parent, "IsBehindHighlightSplit", IsBehindHighlightSplit) ^
         SettingsHelper.CreateSetting(document, parent, "HideSubsplits", HideSubsplits) ^
         SettingsHelper.CreateSetting(document, parent, "ShowSubsplits", ShowSubsplits) ^
         SettingsHelper.CreateSetting(document, parent, "CurrentSectionOnly", CurrentSectionOnly) ^
