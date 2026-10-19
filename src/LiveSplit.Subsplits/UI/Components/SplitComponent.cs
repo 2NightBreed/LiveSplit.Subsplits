@@ -37,7 +37,9 @@ public class SplitComponent : IComponent
     public GraphicsCache Cache { get; set; }
     protected bool NeedUpdateAll { get; set; }
     protected bool IsActive { get; set; }
+    protected bool IsSplitBehindCurrentSplit { get; set; }
     protected bool IsHighlight { get; set; }
+    protected bool IsSplitBehindHighlightSplit { get; set; }
     protected bool IsSubsplit { get; set; }
 
     protected TimeAccuracy CurrentAccuracy { get; set; }
@@ -256,7 +258,11 @@ public class SplitComponent : IComponent
                 g.DrawRectangle(highlightPen, 0, 0, width - 1, height - 1);
             }
 
-            Image icon = Split.Icon;
+            bool isSplitBehindCurrentSplit = IsSplitBehindCurrentSplit && Settings.IsBehindCurrentSplit;
+            bool isSplitBehindHighlightSplit = IsSplitBehindHighlightSplit && Settings.IsBehindHighlightSplit;
+            bool isSplitBehind = isSplitBehindCurrentSplit || isSplitBehindHighlightSplit;
+
+            Image icon = isSplitBehindCurrentSplit || isSplitBehindHighlightSplit ? LiveSplitStateHelper.ConvertImageToGrayscale(Split.Icon) : Split.Icon;
             if (DisplayIcon && icon != null)
             {
                 Image shadow = ShadowImage;
@@ -441,7 +447,11 @@ public class SplitComponent : IComponent
             TimeLabel.Height = 50;
         }
 
-        Image icon = Split.Icon;
+        bool isSplitBehindCurrentSplit = IsSplitBehindCurrentSplit && Settings.IsBehindCurrentSplit;
+        bool isSplitBehindHighlightSplit = IsSplitBehindHighlightSplit && Settings.IsBehindHighlightSplit;
+        bool isSplitBehind = isSplitBehindCurrentSplit || isSplitBehindHighlightSplit;
+
+        Image icon = isSplitBehind ? LiveSplitStateHelper.ConvertImageToGrayscale(Split.Icon) : Split.Icon;
         if (DisplayIcon && icon != null)
         {
             Image shadow = ShadowImage;
@@ -770,6 +780,8 @@ public class SplitComponent : IComponent
                 {
                     DeltaLabel.Text = "";
                 }
+
+                splitIndex = TopSplit - 1;
             }
             else
             {
@@ -794,6 +806,9 @@ public class SplitComponent : IComponent
                     }
                 }
             }
+
+            IsSplitBehindCurrentSplit = splitIndex < state.CurrentSplitIndex;
+            IsSplitBehindHighlightSplit = SplitsSettings.HilightSplit == null ? IsSplitBehindCurrentSplit : splitIndex < state.Run.IndexOf(SplitsSettings.HilightSplit);
         }
     }
 
@@ -1160,6 +1175,8 @@ public class SplitComponent : IComponent
             Cache["TimeLabel"] = TimeLabel.Text;
             Cache["IsActive"] = IsActive;
             Cache["IsHighlight"] = IsHighlight;
+            Cache["IsSplitBehindCurrentSplit"] = IsSplitBehindCurrentSplit;
+            Cache["IsSplitBehindHighlightSplit"] = IsSplitBehindHighlightSplit;
             Cache["NameColor"] = NameLabel.ForeColor.ToArgb();
             Cache["TimeColor"] = TimeLabel.ForeColor.ToArgb();
             Cache["DeltaColor"] = DeltaLabel.ForeColor.ToArgb();
