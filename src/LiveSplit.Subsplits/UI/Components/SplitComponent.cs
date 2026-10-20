@@ -689,6 +689,11 @@ public class SplitComponent : IComponent
         return state.LayoutSettings.ShowBestSegments && LiveSplitStateHelper.CheckBestSegment(state, splitIndex, method);
     }
 
+    private bool IsCurrentSplitInCollapsedSection(LiveSplitState state, int splitIndex)
+    {
+        return CollapsedSplit && TopSplit <= state.CurrentSplitIndex && state.CurrentSplitIndex <= splitIndex;
+    }
+
     protected void UpdateAll(LiveSplitState state)
     {
         if (Split != null)
@@ -792,7 +797,7 @@ public class SplitComponent : IComponent
             {
                 RecreateLabels();
 
-                NameLabel.ForeColor = splitIndex < state.CurrentSplitIndex
+                NameLabel.ForeColor = splitIndex < state.CurrentSplitIndex || (IsSplitBehindHighlightSplit && splitIndex != state.CurrentSplitIndex && !IsCurrentSplitInCollapsedSection(state, splitIndex))
                     ? Settings.OverrideTextColor ? Settings.BeforeNamesColor : state.LayoutSettings.TextColor
                     : IsActive
                         ? Settings.OverrideTextColor ? Settings.CurrentNamesColor : state.LayoutSettings.TextColor
@@ -900,9 +905,11 @@ public class SplitComponent : IComponent
         {
             if (type is ColumnType.SplitTime or ColumnType.SegmentTime or ColumnType.DeltaorSplitTime or ColumnType.SegmentDeltaorSegmentTime or ColumnType.CustomVariable)
             {
-                label.ForeColor = IsActive
-                    ? Settings.OverrideTimesColor ? Settings.CurrentTimesColor : state.LayoutSettings.TextColor
-                    : Settings.OverrideTimesColor ? Settings.AfterTimesColor : state.LayoutSettings.TextColor;
+                label.ForeColor = splitIndex != state.CurrentSplitIndex && IsSplitBehindHighlightSplit
+                    ? Settings.BeforeTimesColor
+                    : IsActive
+                        ? Settings.OverrideTimesColor ? Settings.CurrentTimesColor : state.LayoutSettings.TextColor
+                        : Settings.OverrideTimesColor ? Settings.AfterTimesColor : state.LayoutSettings.TextColor;
 
                 if (type is ColumnType.SplitTime or ColumnType.DeltaorSplitTime)
                 {
@@ -1077,9 +1084,11 @@ public class SplitComponent : IComponent
         {
             if (type is ColumnType.SplitTime or ColumnType.SegmentTime or ColumnType.DeltaorSplitTime or ColumnType.SegmentDeltaorSegmentTime or ColumnType.CustomVariable)
             {
-                label.ForeColor = IsActive
-                    ? Settings.OverrideTimesColor ? Settings.CurrentTimesColor : state.LayoutSettings.TextColor
-                    : Settings.OverrideTimesColor ? Settings.AfterTimesColor : state.LayoutSettings.TextColor;
+                label.ForeColor = splitIndex != state.CurrentSplitIndex && IsSplitBehindHighlightSplit && !IsCurrentSplitInCollapsedSection(state, splitIndex)
+                    ? Settings.BeforeTimesColor
+                    : IsActive
+                        ? Settings.OverrideTimesColor ? Settings.CurrentTimesColor : state.LayoutSettings.TextColor
+                        : Settings.OverrideTimesColor ? Settings.AfterTimesColor : state.LayoutSettings.TextColor;
 
                 if (type is ColumnType.SplitTime or ColumnType.DeltaorSplitTime)
                 {
