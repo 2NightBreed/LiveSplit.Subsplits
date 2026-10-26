@@ -1041,12 +1041,10 @@
             // 
             this.rdoSectionTimerAccuracyTenths.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.rdoSectionTimerAccuracyTenths.AutoSize = true;
-            this.rdoSectionTimerAccuracyTenths.Checked = true;
             this.rdoSectionTimerAccuracyTenths.Location = new System.Drawing.Point(106, 5);
             this.rdoSectionTimerAccuracyTenths.Name = "rdoSectionTimerAccuracyTenths";
             this.rdoSectionTimerAccuracyTenths.Size = new System.Drawing.Size(97, 17);
             this.rdoSectionTimerAccuracyTenths.TabIndex = 1;
-            this.rdoSectionTimerAccuracyTenths.TabStop = true;
             this.rdoSectionTimerAccuracyTenths.Text = "Tenths";
             this.rdoSectionTimerAccuracyTenths.UseVisualStyleBackColor = true;
             this.rdoSectionTimerAccuracyTenths.CheckedChanged += new System.EventHandler(this.rdoSectionTimerAccuracyTenths_CheckedChanged);
@@ -1207,12 +1205,10 @@
             // 
             this.rdoHeaderAccuracyTenths.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.rdoHeaderAccuracyTenths.AutoSize = true;
-            this.rdoHeaderAccuracyTenths.Checked = true;
             this.rdoHeaderAccuracyTenths.Location = new System.Drawing.Point(106, 5);
             this.rdoHeaderAccuracyTenths.Name = "rdoHeaderAccuracyTenths";
             this.rdoHeaderAccuracyTenths.Size = new System.Drawing.Size(97, 17);
             this.rdoHeaderAccuracyTenths.TabIndex = 1;
-            this.rdoHeaderAccuracyTenths.TabStop = true;
             this.rdoHeaderAccuracyTenths.Text = "Tenths";
             this.rdoHeaderAccuracyTenths.UseVisualStyleBackColor = true;
             this.rdoHeaderAccuracyTenths.CheckedChanged += new System.EventHandler(this.rdoHeaderAccuracyTenths_CheckedChanged);
