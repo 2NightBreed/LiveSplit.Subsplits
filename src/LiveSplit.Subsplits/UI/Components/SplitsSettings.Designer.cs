@@ -1550,7 +1550,7 @@
             this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 86.4486F));
             this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 13.5514F));
             this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 29F));
-            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 204F));
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 205F));
             this.tableLayoutPanel10.Controls.Add(this.label15, 0, 1);
             this.tableLayoutPanel10.Controls.Add(this.chkOverrideSubsplitColor, 0, 0);
             this.tableLayoutPanel10.Controls.Add(this.cmbSubsplitGradient, 3, 1);
@@ -1573,7 +1573,7 @@
             this.label15.AutoSize = true;
             this.label15.Location = new System.Drawing.Point(3, 36);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(161, 13);
+            this.label15.Size = new System.Drawing.Size(160, 13);
             this.label15.TabIndex = 28;
             this.label15.Text = "Subsplit Background Color:";
             // 
@@ -1584,7 +1584,7 @@
             this.chkOverrideSubsplitColor.Location = new System.Drawing.Point(7, 5);
             this.chkOverrideSubsplitColor.Margin = new System.Windows.Forms.Padding(7, 3, 3, 3);
             this.chkOverrideSubsplitColor.Name = "chkOverrideSubsplitColor";
-            this.chkOverrideSubsplitColor.Size = new System.Drawing.Size(157, 17);
+            this.chkOverrideSubsplitColor.Size = new System.Drawing.Size(156, 17);
             this.chkOverrideSubsplitColor.TabIndex = 1;
             this.chkOverrideSubsplitColor.Text = "Override Layout Settings";
             this.chkOverrideSubsplitColor.UseVisualStyleBackColor = true;
@@ -1599,9 +1599,9 @@
             "Plain",
             "Vertical",
             "Horizontal"});
-            this.cmbSubsplitGradient.Location = new System.Drawing.Point(225, 32);
+            this.cmbSubsplitGradient.Location = new System.Drawing.Point(224, 32);
             this.cmbSubsplitGradient.Name = "cmbSubsplitGradient";
-            this.cmbSubsplitGradient.Size = new System.Drawing.Size(199, 21);
+            this.cmbSubsplitGradient.Size = new System.Drawing.Size(200, 21);
             this.cmbSubsplitGradient.TabIndex = 4;
             this.cmbSubsplitGradient.SelectedIndexChanged += new System.EventHandler(this.cmbSubsplitGradient_SelectedIndexChanged);
             // 
@@ -1611,7 +1611,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSubsplitBottomColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnSubsplitBottomColor.Location = new System.Drawing.Point(196, 31);
+            this.btnSubsplitBottomColor.Location = new System.Drawing.Point(195, 31);
             this.btnSubsplitBottomColor.Name = "btnSubsplitBottomColor";
             this.btnSubsplitBottomColor.Size = new System.Drawing.Size(23, 23);
             this.btnSubsplitBottomColor.TabIndex = 3;
@@ -1624,7 +1624,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSubsplitTopColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnSubsplitTopColor.Location = new System.Drawing.Point(170, 31);
+            this.btnSubsplitTopColor.Location = new System.Drawing.Point(169, 31);
             this.btnSubsplitTopColor.Name = "btnSubsplitTopColor";
             this.btnSubsplitTopColor.Size = new System.Drawing.Size(20, 23);
             this.btnSubsplitTopColor.TabIndex = 2;
