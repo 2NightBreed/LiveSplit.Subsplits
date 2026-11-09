@@ -512,13 +512,14 @@ public partial class SplitsSettings : UserControl
         {
             trkSize.DataBindings.Clear();
             trkSize.Minimum = 0;
-            trkSize.Maximum = 250;
+            trkSize.Maximum = Display2Rows ? 425 : 250;
             ScaledSplitHeight = Math.Min(Math.Max(trkSize.Minimum, ScaledSplitHeight), trkSize.Maximum);
             trkSize.DataBindings.Add("Value", this, "ScaledSplitHeight", false, DataSourceUpdateMode.OnPropertyChanged);
             lblSplitSize.Text = T("Split Height:");
             chkDisplayRows.Enabled = true;
             chkDisplayRows.DataBindings.Clear();
             chkDisplayRows.DataBindings.Add("Checked", this, "Display2Rows", false, DataSourceUpdateMode.OnPropertyChanged);
+            chkDisplayRows_CheckedChanged(chkDisplayRows, EventArgs.Empty);
             chkColumnLabels.DataBindings.Clear();
             chkColumnLabels.Enabled = true;
             chkColumnLabels.DataBindings.Add("Checked", this, "ShowColumnLabels", false, DataSourceUpdateMode.OnPropertyChanged);
@@ -979,5 +980,21 @@ public partial class SplitsSettings : UserControl
     private void chkShowIconSectionSplit_CheckedChanged(object sender, EventArgs e)
     {
         chkLastSubSplitIcons.Enabled = chkShowIconSectionSplit.Checked;
+    }
+
+    private void chkDisplayRows_CheckedChanged(object sender, EventArgs e)
+    {
+        Display2Rows = chkDisplayRows.Checked;
+
+        if (Mode == LayoutMode.Vertical && chkDisplayRows.Checked)
+        {
+            int iconSizeMaximum = 80;
+            trkIconSize.Value = Math.Min(trkIconSize.Value, iconSizeMaximum);
+            trkIconSize.Maximum = iconSizeMaximum;
+
+            trkSize.Maximum = 425;
+            trkSize.Value = Math.Min(trkSize.Value, trkSize.Maximum);
+            ScaledSplitHeight = Math.Min(Math.Max(trkSize.Minimum, ScaledSplitHeight), trkSize.Maximum);
+        }
     }
 }
