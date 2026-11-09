@@ -1905,6 +1905,7 @@
             this.chkDisplayRows.TabIndex = 11;
             this.chkDisplayRows.Text = "Display 2 Rows";
             this.chkDisplayRows.UseVisualStyleBackColor = true;
+            this.chkDisplayRows.CheckedChanged += new System.EventHandler(this.chkDisplayRows_CheckedChanged);
             // 
             // groupColumns
             // 
