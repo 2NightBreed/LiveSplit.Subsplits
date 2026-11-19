@@ -253,7 +253,7 @@ public class SplitComponent : IComponent
             {
                 var color = Color.FromArgb(106, 255, 255, 255);
                 using var highlightPen = new Pen(color);
-                g.DrawRectangle(highlightPen, 0, 0, width - 1, height - 1);
+                g.DrawRectangle(highlightPen, 0.5f, 0.5f, width - 1, height - 1);
             }
 
             Image icon = Split.Icon;
