@@ -139,6 +139,7 @@
             "Segment Delta",
             "Segment Time",
             "Segment Delta or Segment Time",
+            "Segment Delta and Segment Time",
             "Custom Variable"});
             this.cmbColumnType.Location = new System.Drawing.Point(93, 33);
             this.cmbColumnType.Name = "cmbColumnType";

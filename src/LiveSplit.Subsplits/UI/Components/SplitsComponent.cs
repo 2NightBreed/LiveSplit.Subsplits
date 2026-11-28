@@ -724,7 +724,7 @@ public class SplitsComponent : IComponent
                 ColumnData column = ColumnsList.ElementAt(i);
 
                 float labelWidth = 0f;
-                if (column.Type == ColumnType.DeltaandSplitTime)
+                if (column.Type is ColumnType.DeltaandSplitTime or ColumnType.SegmentDeltaandSegmentTime)
                 {
                     labelWidth = deltaWidth + timeWidth;
                 }

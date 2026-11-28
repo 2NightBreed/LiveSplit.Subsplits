@@ -138,6 +138,10 @@ public partial class ColumnSettings : UserControl
         {
             return "Segment Delta or Segment Time";
         }
+        else if (type == ColumnType.SegmentDeltaandSegmentTime)
+        {
+            return "Segment Delta and Segment Time";
+        }
         else if (type == ColumnType.CustomVariable)
         {
             return "Custom Variable";
