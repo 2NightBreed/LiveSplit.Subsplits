@@ -683,6 +683,11 @@ public class SplitsComponent : IComponent
                 ColumnWidths.Add((0, 0f, 0f));
             }
 
+            if (ColumnWidths.Count > ColumnsList.Count())
+            {
+                ColumnWidths.RemoveRange(ColumnsList.Count(), ColumnWidths.Count - ColumnsList.Count());
+            }
+
             var longestTime = new TimeSpan(9, 0, 0);
             var longestDelta = new TimeSpan(0, 0, 59, 0);
             foreach (ISegment split in run.Reverse())
