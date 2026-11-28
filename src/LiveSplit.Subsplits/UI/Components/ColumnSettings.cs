@@ -86,7 +86,7 @@ public partial class ColumnSettings : UserControl
         cmbComparison.Items.Clear();
         cmbComparison.Items.Add("Current Comparison");
 
-        if (Data.Type is ColumnType.Delta or ColumnType.DeltaorSplitTime or ColumnType.SplitTime)
+        if (Data.Type is ColumnType.Delta or ColumnType.DeltaorSplitTime or ColumnType.DeltaandSplitTime or ColumnType.SplitTime)
         {
             cmbComparison.Items.AddRange(CurrentState.Run.Comparisons.Where(x => x != NoneComparisonGenerator.ComparisonName).ToArray());
         }
@@ -121,6 +121,10 @@ public partial class ColumnSettings : UserControl
         else if (type == ColumnType.DeltaorSplitTime)
         {
             return "Delta or Split Time";
+        }
+        else if (type == ColumnType.DeltaandSplitTime)
+        {
+            return "Delta and Split Time";
         }
         else if (type == ColumnType.SegmentTime)
         {

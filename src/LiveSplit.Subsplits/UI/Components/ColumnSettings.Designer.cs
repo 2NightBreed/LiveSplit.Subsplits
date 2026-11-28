@@ -135,6 +135,7 @@
             "Delta",
             "Split Time",
             "Delta or Split Time",
+            "Delta and Split Time",
             "Segment Delta",
             "Segment Time",
             "Segment Delta or Segment Time",

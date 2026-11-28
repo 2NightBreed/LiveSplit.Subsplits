@@ -831,6 +831,8 @@ public class SplitComponent : IComponent
 
     protected void UpdateColumn(LiveSplitState state, SimpleLabel label, ColumnData data)
     {
+        label.TextSegments = null;
+
         string comparison = data.Comparison == "Current Comparison" ? state.CurrentComparison : data.Comparison;
         if (!state.Run.Comparisons.Contains(comparison))
         {
@@ -872,7 +874,7 @@ public class SplitComponent : IComponent
                 }
             }
 
-            if (type is ColumnType.DeltaorSplitTime or ColumnType.Delta)
+            if (type is ColumnType.DeltaorSplitTime or ColumnType.DeltaandSplitTime or ColumnType.Delta)
             {
                 TimeSpan? deltaTime = Split.SplitTime[timingMethod] - Split.Comparisons[comparison][timingMethod];
                 Color? color = LiveSplitStateHelper.GetSplitColor(state, deltaTime, splitIndex, true, true, comparison, timingMethod) ?? (Settings.OverrideTimesColor ? Settings.BeforeTimesColor : state.LayoutSettings.TextColor);
@@ -881,6 +883,11 @@ public class SplitComponent : IComponent
                 if (type == ColumnType.DeltaorSplitTime)
                 {
                     label.Text = deltaTime != null ? DeltaTimeFormatter.Format(deltaTime) : TimeFormatter.Format(Split.SplitTime[timingMethod]);
+                }
+                else if (type == ColumnType.DeltaandSplitTime)
+                {
+                    Color splitTimeColor = Settings.OverrideTimesColor ? Settings.BeforeTimesColor : state.LayoutSettings.TextColor;
+                    label.Text = FormatDeltaAndSplitTime(label, deltaTime, Split.SplitTime[timingMethod], color.Value, splitTimeColor);
                 }
 
                 else if (type == ColumnType.Delta)
@@ -910,15 +917,17 @@ public class SplitComponent : IComponent
         }
         else
         {
-            if (type is ColumnType.SplitTime or ColumnType.SegmentTime or ColumnType.DeltaorSplitTime or ColumnType.SegmentDeltaorSegmentTime or ColumnType.CustomVariable)
-            {
-                label.ForeColor = splitIndex != state.CurrentSplitIndex && IsSplitBehindHighlightSplit
-                    ? Settings.BeforeTimesColor
-                    : IsActive
-                        ? Settings.OverrideTimesColor ? Settings.CurrentTimesColor : state.LayoutSettings.TextColor
-                        : Settings.OverrideTimesColor ? Settings.AfterTimesColor : state.LayoutSettings.TextColor;
+            Color splitTimeColor = Split == state.CurrentSplit
+                ? Settings.OverrideTimesColor ? Settings.CurrentTimesColor : state.LayoutSettings.TextColor
+                : IsSplitBehindHighlightSplit
+                ? Settings.OverrideTimesColor ? Settings.BeforeTimesColor : state.LayoutSettings.TextColor
+                : Settings.OverrideTimesColor ? Settings.AfterTimesColor : state.LayoutSettings.TextColor;
 
-                if (type is ColumnType.SplitTime or ColumnType.DeltaorSplitTime)
+            if (type is ColumnType.SplitTime or ColumnType.SegmentTime or ColumnType.DeltaorSplitTime or ColumnType.DeltaandSplitTime or ColumnType.SegmentDeltaorSegmentTime or ColumnType.CustomVariable)
+            {
+                label.ForeColor = splitTimeColor;
+
+                if (type is ColumnType.SplitTime or ColumnType.DeltaorSplitTime or ColumnType.DeltaandSplitTime)
                 {
                     label.Text = TimeFormatter.Format(Split.Comparisons[comparison][timingMethod]);
                 }
@@ -951,13 +960,22 @@ public class SplitComponent : IComponent
             }
 
             //Live Delta
-            bool splitDelta = type is ColumnType.DeltaorSplitTime or ColumnType.Delta;
+            bool splitDelta = type is ColumnType.DeltaorSplitTime or ColumnType.DeltaandSplitTime or ColumnType.Delta;
             TimeSpan? bestDelta = LiveSplitStateHelper.CheckLiveDelta(state, splitDelta, comparison, timingMethod);
             if (bestDelta != null && IsActive &&
-                (type == ColumnType.DeltaorSplitTime || type == ColumnType.Delta || type == ColumnType.SegmentDeltaorSegmentTime || type == ColumnType.SegmentDelta))
+                (type == ColumnType.DeltaorSplitTime || type == ColumnType.DeltaandSplitTime || type == ColumnType.Delta || type == ColumnType.SegmentDeltaorSegmentTime || type == ColumnType.SegmentDelta))
             {
-                label.Text = DeltaTimeFormatter.Format(bestDelta);
-                label.ForeColor = Settings.OverrideDeltasColor ? Settings.DeltasColor : state.LayoutSettings.TextColor;
+                Color deltaColor = Settings.OverrideDeltasColor ? Settings.DeltasColor : state.LayoutSettings.TextColor;
+                if (type == ColumnType.DeltaandSplitTime)
+                {
+                    label.Text = FormatDeltaAndSplitTime(label, bestDelta, Split.Comparisons[comparison][timingMethod], deltaColor, splitTimeColor);
+                }
+                else
+                {
+                    label.Text = DeltaTimeFormatter.Format(bestDelta);
+                }
+
+                label.ForeColor = deltaColor;
             }
             else if (type is ColumnType.Delta or ColumnType.SegmentDelta)
             {
@@ -990,6 +1008,8 @@ public class SplitComponent : IComponent
 
     protected void UpdateCollapsedColumn(LiveSplitState state, SimpleLabel label, ColumnData data)
     {
+        label.TextSegments = null;
+
         string comparison = data.Comparison == "Current Comparison" ? state.CurrentComparison : data.Comparison;
         if (!state.Run.Comparisons.Contains(comparison))
         {
@@ -1031,12 +1051,13 @@ public class SplitComponent : IComponent
                 }
             }
 
-            if (type is ColumnType.DeltaorSplitTime or ColumnType.Delta)
+            if (type is ColumnType.DeltaorSplitTime or ColumnType.DeltaandSplitTime or ColumnType.Delta)
             {
                 TimeSpan? deltaTime = Split.SplitTime[timingMethod] - Split.Comparisons[comparison][timingMethod];
                 TimeSpan? segmentDelta = getSectionDelta(state, splitIndex, TopSplit, comparison, timingMethod);
                 Color? color = GetSectionColor(state, deltaTime, segmentDelta)
                     ?? (Settings.OverrideTimesColor ? Settings.BeforeTimesColor : state.LayoutSettings.TextColor);
+                Color splitTimeColor = Settings.OverrideTimesColor ? Settings.BeforeTimesColor : state.LayoutSettings.TextColor;
 
                 if (IsBestSegment(state, splitIndex, timingMethod))
                 {
@@ -1048,6 +1069,10 @@ public class SplitComponent : IComponent
                 if (type == ColumnType.DeltaorSplitTime)
                 {
                     label.Text = deltaTime != null ? DeltaTimeFormatter.Format(deltaTime) : TimeFormatter.Format(Split.SplitTime[timingMethod]);
+                }
+                else if (type == ColumnType.DeltaandSplitTime)
+                {
+                    label.Text = FormatDeltaAndSplitTime(label, deltaTime, Split.SplitTime[timingMethod], color.Value, splitTimeColor);
                 }
 
                 else if (type == ColumnType.Delta)
@@ -1089,15 +1114,17 @@ public class SplitComponent : IComponent
         }
         else
         {
-            if (type is ColumnType.SplitTime or ColumnType.SegmentTime or ColumnType.DeltaorSplitTime or ColumnType.SegmentDeltaorSegmentTime or ColumnType.CustomVariable)
-            {
-                label.ForeColor = splitIndex != state.CurrentSplitIndex && IsSplitBehindHighlightSplit && !IsCurrentSplitInCollapsedSection(state, splitIndex)
-                    ? Settings.BeforeTimesColor
-                    : IsActive
-                        ? Settings.OverrideTimesColor ? Settings.CurrentTimesColor : state.LayoutSettings.TextColor
-                        : Settings.OverrideTimesColor ? Settings.AfterTimesColor : state.LayoutSettings.TextColor;
+            Color splitTimeColor = splitIndex != state.CurrentSplitIndex && IsSplitBehindHighlightSplit && !IsCurrentSplitInCollapsedSection(state, splitIndex)
+                ? Settings.BeforeTimesColor
+                : IsActive
+                    ? Settings.OverrideTimesColor ? Settings.CurrentTimesColor : state.LayoutSettings.TextColor
+                    : Settings.OverrideTimesColor ? Settings.AfterTimesColor : state.LayoutSettings.TextColor;
 
-                if (type is ColumnType.SplitTime or ColumnType.DeltaorSplitTime)
+            if (type is ColumnType.SplitTime or ColumnType.SegmentTime or ColumnType.DeltaorSplitTime or ColumnType.DeltaandSplitTime or ColumnType.SegmentDeltaorSegmentTime or ColumnType.CustomVariable)
+            {
+                label.ForeColor = splitTimeColor;
+
+                if (type is ColumnType.SplitTime or ColumnType.DeltaorSplitTime or ColumnType.DeltaandSplitTime)
                 {
                     label.Text = TimeFormatter.Format(Split.Comparisons[comparison][timingMethod]);
                 }
@@ -1120,13 +1147,22 @@ public class SplitComponent : IComponent
             }
 
             //Live Delta
-            bool splitDelta = type is ColumnType.DeltaorSplitTime or ColumnType.Delta;
+            bool splitDelta = type is ColumnType.DeltaorSplitTime or ColumnType.DeltaandSplitTime or ColumnType.Delta;
             TimeSpan? bestDelta = CheckLiveDeltaCollapsed(state, splitIndex, splitDelta, comparison, timingMethod);
             if (bestDelta != null && IsActive
-                && type is ColumnType.DeltaorSplitTime or ColumnType.Delta or ColumnType.SegmentDeltaorSegmentTime or ColumnType.SegmentDelta)
+                && type is ColumnType.DeltaorSplitTime or ColumnType.DeltaandSplitTime or ColumnType.Delta or ColumnType.SegmentDeltaorSegmentTime or ColumnType.SegmentDelta)
             {
-                label.Text = DeltaTimeFormatter.Format(bestDelta);
-                label.ForeColor = Settings.OverrideDeltasColor ? Settings.DeltasColor : state.LayoutSettings.TextColor;
+                Color deltaColor = Settings.OverrideDeltasColor ? Settings.DeltasColor : state.LayoutSettings.TextColor;
+                if (type == ColumnType.DeltaandSplitTime)
+                {
+                    label.Text = FormatDeltaAndSplitTime(label, bestDelta, Split.Comparisons[comparison][timingMethod], deltaColor, splitTimeColor);
+                }
+                else
+                {
+                    label.Text = DeltaTimeFormatter.Format(bestDelta);
+                }
+
+                label.ForeColor = deltaColor;
             }
             else if (type is ColumnType.Delta or ColumnType.SegmentDelta)
             {
@@ -1150,6 +1186,30 @@ public class SplitComponent : IComponent
         }
 
         return width;
+    }
+
+    private string FormatDeltaAndSplitTime(SimpleLabel label, TimeSpan? delta, TimeSpan? splitTime, Color deltaColor, Color splitTimeColor)
+    {
+        string formattedDelta = DeltaTimeFormatter.Format(delta);
+        string formattedSplitTime = TimeFormatter.Format(splitTime);
+        if (delta == null)
+        {
+            label.TextSegments = [new SimpleLabel.TextSegment(formattedSplitTime, splitTimeColor)];
+            return formattedSplitTime;
+        }
+
+        if (splitTime == null)
+        {
+            label.TextSegments = [new SimpleLabel.TextSegment(formattedDelta, deltaColor)];
+            return formattedDelta;
+        }
+
+        label.TextSegments =
+        [
+            new SimpleLabel.TextSegment(formattedDelta, deltaColor),
+            new SimpleLabel.TextSegment($" / {formattedSplitTime}", splitTimeColor)
+        ];
+        return $"{formattedDelta} / {formattedSplitTime}";
     }
 
     protected float CalculateLabelsWidth()
